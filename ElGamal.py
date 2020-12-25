@@ -40,6 +40,7 @@ class elGamal():
         mStar = pow(m,2)% modValue
         print(mStar)
         return mStar
+        
     encVal=message(p)
     
     def encryption(encValue,encOption):
