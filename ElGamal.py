@@ -2,7 +2,7 @@
 import math
 import keyword
 import random
-
+from types import *
 #from typing import MutableSequence
 
 # Public key is <G,q,g,h>
@@ -17,6 +17,14 @@ def HCF(num1,num2):
         return HCF(num2,num1%num2)
 def coprime(num1,num2):
     return HCF(num1,num2)==1
+
+def natural(num):
+    if num>0 and type(num) == int:
+        return 1
+    else:
+        return 0
+    
+
 
 def EulerGroup(x): # TO get a list of numbers in Z*q
     phiGroup=[]
@@ -135,7 +143,7 @@ def cipherText2(h,y,m,p):
     return CT2
 
 # Function to encrypt the message and display ciphertexts
-def encryption(g,y,h,p,m):
+def encryption(g,y,h,p,m,x):
     print("Genertating Cipher Text 1")
     c1= cipherText1(g,y,p)
     #print("Cipher Text 1 is: "+ str(c1))
@@ -143,6 +151,9 @@ def encryption(g,y,h,p,m):
     #print("Genertating Cipher Text 2")
     c2 = cipherText2(h,y,m,p)
     print("Cipher Text 2 is: "+ str(c2))
+    print("Decrypting the Message")
+    decryption(c1,c2,x,p)
+
 
 # Function to Decrypt the cipher texts to give us 
 def decryption(c1,c2,x,p):
@@ -151,13 +162,31 @@ def decryption(c1,c2,x,p):
     #C1X * value = 1 mod p
     invC1X = multInverse(C1X,p)
     pd = c2*invC1X
-    orgMsg = modExponent(pd,1,p)
-    print("Original Message is: "+ str(orgMsg))
+    orgMstar = pd% p
+    #print("Original M* is: "+ str(orgMstar))
+    #orgMessage= 0
+    result = 0
+    # a^2 mod p = m*
+    # a = math.sqrt(m* + p*i)
+    for i in range(p):
+        for a in range (p):
 
+            rhs = p*a + orgMstar
+            answer = math.sqrt(rhs)
+            if pow(i,2) == rhs and answer < orgMstar:
+                #print("Answer is:"+ str(answer))
+                result = int(answer)
+    
+    orgM = result - 1
 
+    print("The Original message Encrypted was: " + str(orgM))
 
-
-   
+        
+       
+            
+       
+    
+ 
 # Main Function which would act as the Driver Code
 def main():
     print("*************************** Simple Program for EL-GAMAL Algorithm(Quadratic residue) ***************************")
@@ -178,8 +207,9 @@ def main():
     h = publicKey(p,q,x,g)
     #print(modExponent(76,55,167))
     # Encrypting the Message
-    #encryption(4,71,76,167,65)
-    encryption(g,y,h,p,m)
+    #encryption(4,71,76,167,65,37)
+    encryption(4,75,76,167,65,37)
+    #encryption(g,y,h,p,m,x)
     
     
     
