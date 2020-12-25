@@ -163,7 +163,7 @@ def decryption(c1,c2,x,p):
     invC1X = multInverse(C1X,p)
     pd = c2*invC1X
     orgMstar = pd% p
-    #print("Original M* is: "+ str(orgMstar))
+    print("Original M* is: "+ str(orgMstar))
     #orgMessage= 0
     result = 0
     # a^2 mod p = m*
@@ -180,13 +180,8 @@ def decryption(c1,c2,x,p):
     orgM = result - 1
 
     print("The Original message Encrypted was: " + str(orgM))
+    return orgM
 
-        
-       
-            
-       
-    
- 
 # Main Function which would act as the Driver Code
 def main():
     print("*************************** Simple Program for EL-GAMAL Algorithm(Quadratic residue) ***************************")
@@ -205,16 +200,9 @@ def main():
     x = privateKey(q)
     # calculating h
     h = publicKey(p,q,x,g)
-    #print(modExponent(76,55,167))
-    # Encrypting the Message
-    #encryption(4,71,76,167,65,37)
-    encryption(4,75,76,167,65,37)
-    #encryption(g,y,h,p,m,x)
     
-    
-    
-    
-    
+    encryption(g,y,h,p,m,x)
+       
 if __name__ == '__main__':
     main()
 
