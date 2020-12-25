@@ -2,7 +2,8 @@
 import math
 import keyword
 import random
-from typing import MutableSequence
+
+#from typing import MutableSequence
 
 # Public key is <G,q,g,h>
 # Private Key is <G,q,g,x>
@@ -17,7 +18,7 @@ def HCF(num1,num2):
 def coprime(num1,num2):
     return HCF(num1,num2)==1
 
-def EulerGroup(x):
+def EulerGroup(x): # TO get a list of numbers in Z*q
     phiGroup=[]
     if x == 1:
         return 1
@@ -25,8 +26,50 @@ def EulerGroup(x):
         for a in range(1,x):
             if coprime(x,a):
                 phiGroup.append(a)
-    print (phiGroup)
+    #print (phiGroup)
     return phiGroup
+def EulerTot(num):
+    return len(EulerGroup(num))
+
+def primefactor(n):
+    factorlist=[]
+    while(n%2)==0:
+        factorlist.append(2)
+        n=n/2
+    
+    for i in range(3,int(math.sqrt(n))+1,2):
+        while n%i==0:
+            factorlist.append(i)
+            n=n/i
+
+    if n>2:
+        factorlist.append(n)
+
+    return factorlist
+
+
+# Function to do Modulo arithmetic as per the cryptographic rules
+# Modulo Exponnentitaion 
+def modExponent(num1,num2,num3): 
+    # we know that Eulers Totient is always even
+    # we also know the group proeprty using Chinese remainder Theorem that any number raised to the number of objects in the group
+    # will give us 1.
+    val = num2 - EulerTot(num3)
+    
+    #result = 0
+    if val > 0:
+        for i in range(0,len(primefactor(num2))):
+            power = primefactor(val)
+            num1= pow(num1,power[i]) % num3
+    else:
+        for y in range(0,len(primefactor(num2))):
+            power = primefactor(num2)
+            num1 = pow(num1,power[y]) % num3
+    return num1
+
+
+        
+    
 
 
 def numInGroup(x): # function to define the elements in quadratic group
@@ -40,7 +83,13 @@ def numInGroup(x): # function to define the elements in quadratic group
     #print (newGlist)
     return newGlist
 
-#def publicKey(): # generating Public Key
+def publicKey(p,q): # generating Public Key
+    g = random.choice(numInGroup(p)) # To get a random g from G(p).
+    x = random.choice(EulerGroup(q)) # To get a random x from Z*q
+
+    # calcuate h
+
+
 
 
 
@@ -64,22 +113,17 @@ def encryption(encValue,encOption):
     
 
 def main():
-    print("*************************** Simple Program for EL-GAMAL Algorithm ***************************")
+    print("*************************** Simple Program for EL-GAMAL Algorithm(Quadratic residue) ***************************")
     print("Enter the value for q :")
     q = int(input())
     #print("You have chosen "+str(q))
     
     p = (2*q) + 1
-
-    print("The value of P is "+ str(p)) 
-    encList = numInGroup(p) # To chose a randome y from the list
-    print(encList)
-    encVal=message(p)
-    print("Lets Encrypt a the message")
-    encryption(encVal,encList)
+    ans = modExponent(4,55,167)
+    print(ans)
     
-    if __name__ == '__main__':
-        main()
+if __name__ == '__main__':
+    main()
 
 
 
