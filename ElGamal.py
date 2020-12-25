@@ -31,6 +31,8 @@ def EulerGroup(x): # TO get a list of numbers in Z*q
 def EulerTot(num):
     return len(EulerGroup(num))
 
+
+# Function to Calculate Prime Factors of a number and store them in a list
 def primefactor(n):
     factorlist=[]
     while(n%2)==0:
@@ -46,7 +48,6 @@ def primefactor(n):
         factorlist.append(n)
 
     return factorlist
-
 
 # Function to do Modulo arithmetic as per the cryptographic rules
 # Modulo Exponnentitaion 
@@ -68,10 +69,7 @@ def modExponent(num1,num2,num3):
     return num1
 
 
-        
-    
-
-
+# Function to define the elements in a quadratic group
 def numInGroup(x): # function to define the elements in quadratic group
     GList=[]
     for i in range (1,x):
@@ -83,16 +81,6 @@ def numInGroup(x): # function to define the elements in quadratic group
     #print (newGlist)
     return newGlist
 
-def publicKey(p,q): # generating Public Key
-    g = random.choice(numInGroup(p)) # To get a random g from G(p).
-    x = random.choice(EulerGroup(q)) # To get a random x from Z*q
-
-    # calcuate h
-
-
-
-
-
 def message(modValue):
     #obj= elGamal()
     print("Please Enter the vale for M as an integer")
@@ -103,24 +91,54 @@ def message(modValue):
     print(mStar)
     return mStar
         
+def yGenerator(q):#
+    y = random.choice(EulerGroup(q)) # To get a random y from Z*q
+    return y
+
+def privateKey(q):
+    x = random.choice(EulerGroup(q)) # To get a random x from Z*q
+    return x
+# Function to generate a Public Key <G,q,g,h>
+def publicKey(p,q): # generating Public Key
+    g = random.choice(numInGroup(p)) # To get a random g from G(p).
+    power = privateKey(q) # Get the private key x to calculate H
+    # calcuate h
+    h = modExponent(g,power,p)
+
+# Function to Generate Cipher Text 1
+def cipherText1(g,y,p):
+    CT1 = modExponent(g,y,p)
+    #print("CipherText 1 is "+str(CT1))
+    return CT1
+
+
+# Function to Generate Cipher Text 2
+def cipherText2(h,y,m,p):
+    Pt1= modExponent(h,y,p)
+    Pt2 = modExponent(m,1,p)
+    CT2 = modExponent(Pt1*Pt2,1,p)
+    #print("CipherText 2 is "+ str(CT2)) 
+    return CT2
+
+# Function to encrypt the message and display ciphertexts
+def encryption(g,y,h,p):
+    print("Genertating Cipher Text 1")
+    c1= cipherText1(g,y,p)
+    m=message(p)
+    print("Genertating Cipher Text 2")
+    c2 = cipherText2(h,y,m,p)
+
+    print("Cipher Text 1 is: "+ str(c1))
+    print("Cipher Text 2 is: "+ str(c2))
    
-    
-def encryption(encValue,encOption):
-        
-    val = random.choice(encOption)
-    print(val)
-
-    
-
+# Main Function which would act as the Driver Code
 def main():
     print("*************************** Simple Program for EL-GAMAL Algorithm(Quadratic residue) ***************************")
     print("Enter the value for q :")
     q = int(input())
     #print("You have chosen "+str(q))
-    
     p = (2*q) + 1
-    ans = modExponent(4,55,167)
-    print(ans)
+    
     
 if __name__ == '__main__':
     main()
