@@ -195,7 +195,7 @@ def decryption(c1,c2,x,p):
     print("Inverse of C1**x is: "+str(invDenmo))
     prod = c2*invDenmo
     mStar = prod % p
-    print("Hence mStar is: "+str(mStar))
+    print("After Decryotion m* is: "+str(mStar))
 
     
         
